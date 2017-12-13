@@ -1,0 +1,10 @@
+Primeira linha vem a raiz : elemento1[raiz], prr1[raiz], ..., elemento n [raiz], prr n[raiz]
+segunda linha: filho mais a esquerda de raiz : elemtno1, prr1, ... (todos os elementos do vetor)
+terceira linha: filho mais a esquerda da 2ª linha (é uma folha)
+quarta linha: proximo filho da 2ª linha ...
+...
+n linha: ultimo filho da 2ª linha
+n+1 linha: segundo filho da primeira linha
+n+... linha: todos os filhos da linha de cima
+...
+até acabar
