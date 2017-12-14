@@ -7,7 +7,7 @@ chaves = a.getChave()
 prr = a.getPRR()
 
 for i, j in zip(chaves, prr):
-    tree.inserir([i, j])
+    tree.inserir(i, j)
 
 print tree 
 while 1:
@@ -38,5 +38,8 @@ while 1:
 		break
 	else:
 		print("Opcao inexistente!")
+
+p = tree.buscar('999971')
+print(p)
 
 
