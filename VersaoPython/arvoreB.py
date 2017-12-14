@@ -48,13 +48,10 @@ class arvoreB(object):
         No = raiz
         while True:
             # procura posicao no no atual
-          #  assert len(No.chaves) < self.ocupMax
-          #  assert No is raiz or len(No.chaves) >= self.ocupMin
             index = No.busca(obj)
             if index >= 0:
                 return  # nao insere se chave ja existir
             index = ~index
-          #  assert index >= 0
 
             if No.is_folha():  # insere normalmente em folha
                 No.chaves.insert(index, obj)
