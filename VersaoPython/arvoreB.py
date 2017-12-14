@@ -165,6 +165,9 @@ class arvoreB(object):
                         break
                     No = No.filhos[0]
 
+    def __str__(self):
+        return self.raiz.__str__()
+
     class No(object): # estrutura de um no
 
         def __init__(self, ocupMax, folha):
@@ -286,3 +289,9 @@ class arvoreB(object):
                 return filho
             else:
                 raise AssertionError("Condicao inesperada")
+
+        def __str__(self):
+                if self.is_folha():
+                    return "\tNo folha com {0} chaves\n\t\tChaves: {1}\n".format(len(self.chaves), self.chaves)
+                else:
+                    return "No interno com com {0} chaves e {1} filhos\n\tChaves: {2}\n\n".format(len(self.chaves), len(self.filhos), self.chaves)+'\n'.join([filho.__str__() for filho in self.filhos])
