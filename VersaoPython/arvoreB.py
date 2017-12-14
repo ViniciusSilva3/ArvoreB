@@ -4,11 +4,10 @@ import numbers
 
 class arvoreB(object):
 
-    # grau representa o numero minimo de filhos do no
-    def __init__(self, grau, coll=None):
+    def __init__(self, ordem, coll=None):
 
-        self.ocupMin = grau - 1  # minimo de chaves no no
-        self.ocupMax = grau * 2 - 1  # maximo de chaves no no
+        self.ocupMin = ordem // 2 - 1  # minimo de chaves no no
+        self.ocupMax = ordem - 1  # maximo de chaves no no
 
         self.clear()
         if coll is not None:
@@ -49,13 +48,13 @@ class arvoreB(object):
         No = raiz
         while True:
             # procura posicao no no atual
-            assert len(No.chaves) < self.ocupMax
-            assert No is raiz or len(No.chaves) >= self.ocupMin
+          #  assert len(No.chaves) < self.ocupMax
+          #  assert No is raiz or len(No.chaves) >= self.ocupMin
             index = No.busca(obj)
             if index >= 0:
                 return  # nao insere se chave ja existir
             index = ~index
-            assert index >= 0
+          #  assert index >= 0
 
             if No.is_folha():  # insere normalmente em folha
                 No.chaves.insert(index, obj)
@@ -86,8 +85,6 @@ class arvoreB(object):
         index = raiz.busca(obj)
         No = raiz
         while True:
-            assert len(No.chaves) <= self.ocupMax
-            assert No is raiz or len(No.chaves) > self.ocupMin
             if No.is_folha():
                 if index >= 0:  # remove normalmente de folha
                     No.remove_chave(index)
@@ -120,7 +117,7 @@ class arvoreB(object):
                         index = self.ocupMin
                     else:
                         raise AssertionError("Condicao inesperada")
-                else:  # Key might be found in some child
+                else:  # procura chave em filhos
                     filho = No.verifica_remocao(~index)
                     if No is raiz and len(raiz.chaves) == 0:
                         self.raiz = raiz.filhos[0]  # diminui altura
@@ -143,12 +140,10 @@ class arvoreB(object):
                 break
             No = No.filhos[0]
 
-        # Generate elements
         while len(pilhaNo) > 0:
             No = pilhaNo.pop()
             index = indicePilha.pop()
             if No.is_folha():
-                assert index == 0
                 for obj in No.chaves:
                     yield obj
             else:
@@ -171,7 +166,6 @@ class arvoreB(object):
     class No(object): # estrutura de um no
 
         def __init__(self, ocupMax, folha):
-            assert ocupMax >= 3 and ocupMax % 2 == 1
             self.ocupMax = ocupMax
             self.chaves = []
             self.filhos = None if folha else []
@@ -196,9 +190,7 @@ class arvoreB(object):
             ocupMin = len(self.chaves) // 2
             No = self
             while not No.is_folha():
-                assert len(No.chaves) > ocupMin
                 No = No.verifica_remocao(0)
-            assert len(No.chaves) > ocupMin
             return No.remove_chave(0)
 
         # remove maior chave encontrada em subarvore desse no
@@ -206,9 +198,7 @@ class arvoreB(object):
             ocupMin = len(self.chaves) // 2
             No = self
             while not No.is_folha():
-                assert len(No.chaves) > ocupMin
                 No = No.verifica_remocao(len(No.filhos) - 1)
-            assert len(No.chaves) > ocupMin
             return No.remove_chave(len(No.chaves) - 1)
 
         # remove chave no indice passado
@@ -246,20 +236,15 @@ class arvoreB(object):
 
         # verifica se remocao requer tratamentos adicionais
         def verifica_remocao(self, index):
-            assert not self.is_folha()
             ocupMin = self.ocupMax // 2
             filho = self.filhos[index]
             if len(filho.keys) > ocupMin:  # no e preciso tratar esse caso
                 return filho
-            assert len(filho.keys) == ocupMin
 
             # pega nos irmaos
             esquerda = self.filhos[index - 1] if index >= 1 else None
             direita = self.filhos[index + 1] if index < len(self.chaves) else None
             interno = not filho.is_folha()
-            assert esquerda is not None or direita is not None
-            assert esquerda is None or esquerda.is_folha() != interno # verifica se os irmaos sao ambos folhas
-            assert direita is None or direita.is_folha() != interno   # ou nos internos
 
             if esquerda is not None and len(esquerda.chaves) > ocupMin:  # pega chave mais a direita da irmao da esquerda
                 if interno:
@@ -274,14 +259,12 @@ class arvoreB(object):
                 self.chaves[index] = direita.remove_chave(0)
                 return filho
             elif esquerda is not None:  # faz uniao de filho com irmao da esquerda
-                assert len(esquerda.chaves) == ocupMin
                 if interno:
                     esquerda.fihos.extend(filho.children)
                 esquerda.chaves.append(self.remove_chave_e_filho(index - 1, index))
                 esquerda.chaves.extend(filho.keys)
                 return esquerda
             elif direita is not None:  # faz uniao de filho com irmao da direita
-                assert len(direita.chaves) == ocupMin
                 if interno:
                     filho.filhos.extend(direita.filhos)
                 filho.chaves.append(self.remove_chave_e_filho(index, index + 1))
@@ -290,8 +273,8 @@ class arvoreB(object):
             else:
                 raise AssertionError("Condicao inesperada")
 
-        def __str__(self):
+        def __str__(self, nivel = 0):
                 if self.is_folha():
-                    return "\tNo folha com {0} chaves\n\t\tChaves: {1}\n".format(len(self.chaves), self.chaves)
+                    return "\tNo folha com {0} chaves no nivel {1}\n\tChaves: {2}\n".format(len(self.chaves), nivel, self.chaves)
                 else:
-                    return "No interno com com {0} chaves e {1} filhos\n\tChaves: {2}\n\n".format(len(self.chaves), len(self.filhos), self.chaves)+'\n'.join([filho.__str__() for filho in self.filhos])
+                    return "No interno com com {0} chaves e {1} filhos no nivel {2}\n\tChaves: {3}\n\n".format(len(self.chaves), len(self.filhos), nivel, self.chaves)+'\n'.join([filho.__str__(nivel + 1) for filho in self.filhos])
