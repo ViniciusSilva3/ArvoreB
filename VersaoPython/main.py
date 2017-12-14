@@ -1,8 +1,8 @@
 import arvoreB
-import pecaquebrada
+import arquivo
 tree = arvoreB.arvoreB(50)
 
-a = pecaquebrada.base("data.txt")
+a = arquivo.base("data.txt")
 chaves = a.getChave()
 prr = a.getPRR()
 
