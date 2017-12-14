@@ -11,28 +11,28 @@ class arvoreB(object):
 
         self.clear()
         if coll is not None:
-            for obj in coll:
-                self.inserir(obj)
+            for x in coll:
+                self.inserir(x)
 
     def __len__(self):
-        return self.size
+        return self.tamanho
 
     def clear(self):
         self.raiz = arvoreB.No(self.ocupMax, True)
-        self.size = 0
+        self.tamanho = 0
 
-    def __contains__(self, obj):
+    def __contains__(self, x):
         No = self.raiz
         while True:
-            index = No.busca(obj)
-            if index >= 0:
+            indice = No.busca(x)
+            if indice >= 0:
                 return True
             elif No.is_folha():
                 return False
             else:  # no interno
-                No = No.children[~index]
+                No = No.children[~indice]
 
-    def inserir(self, obj):
+    def inserir(self, x):
         # primeiro eh tratada a divisao
         raiz = self.raiz
         if len(raiz.chaves) == self.ocupMax:
@@ -48,86 +48,83 @@ class arvoreB(object):
         No = raiz
         while True:
             # procura posicao no no atual
-          #  assert len(No.chaves) < self.ocupMax
-          #  assert No is raiz or len(No.chaves) >= self.ocupMin
-            index = No.busca(obj)
-            if index >= 0:
+            indice = No.busca(x)
+            if indice >= 0:
                 return  # nao insere se chave ja existir
-            index = ~index
-          #  assert index >= 0
+            indice = ~indice
 
             if No.is_folha():  # insere normalmente em folha
-                No.chaves.insert(index, obj)
-                self.size += 1
+                No.chaves.insert(indice, x)
+                self.tamanho += 1
                 return
             else:  # trata nos internos
-                filho = No.filhos[index]
+                filho = No.filhos[indice]
                 if len(filho.chaves) == self.ocupMax:  # divide filho
                     direita, meio = filho.dividir()
-                    No.filhos.insert(index + 1, direita)
-                    No.chaves.insert(index, meio)
-                    if obj == meio:
+                    No.filhos.insert(indice + 1, direita)
+                    No.chaves.insert(indice, meio)
+                    if x == meio:
                         return False  # nao insere se chave ja existir
-                    elif obj > meio:
+                    elif x > meio:
                         filho = direita
                 No = filho
 
-    def remove(self, obj):
-        if not self._remove(obj):
-            raise KeyError(str(obj))
+    def remove(self, x):
+        if not self._remove(x):
+            raise KeyError(str(x))
 
-    def discard(self, obj):
-        self._remove(obj)
+    def discard(self, x):
+        self._remove(x)
 
-    def _remove(self, obj):
+    def _remove(self, x):
         # percorre arvore
         raiz = self.raiz
-        index = raiz.busca(obj)
+        indice = raiz.busca(x)
         No = raiz
         while True:
             if No.is_folha():
-                if index >= 0:  # remove normalmente de folha
-                    No.remove_chave(index)
-                    self.size -= 1
+                if indice >= 0:  # remove normalmente de folha
+                    No.remove_chave(indice)
+                    self.tamanho -= 1
                     return True
                 else:
                     return False
 
             else:  # trata nos internos
-                if index >= 0:  # chave esta no no atual
-                    esquerda, direita = No.filhos[index: index + 2]
+                if indice >= 0:  # chave esta no no atual
+                    esquerda, direita = No.filhos[indice: indice + 2]
                     if len(esquerda.chaves) > self.ocupMin:  # substituir chave
-                        No.chaves[index] = esquerda.remove_max()
-                        self.size -= 1
+                        No.chaves[indice] = esquerda.remove_max()
+                        self.tamanho -= 1
                         return True
                     elif len(direita.chaves) > self.ocupMin:
-                        No.chaves[index] = direita.remove_min()
-                        self.size -= 1
+                        No.chaves[indice] = direita.remove_min()
+                        self.tamanho -= 1
                         return True
                     elif len(esquerda.chaves) == self.ocupMin and len(direita.chaves) == self.ocupMin:
                         # faz uniao do no da esquerda e direita
                         if not esquerda.is_folha():
                             esquerda.filhos.extend(direita.children)
-                        esquerda.chaves.append(No.remove_chave_e_filho(index, index + 1))
+                        esquerda.chaves.append(No.remove_chave_e_filho(indice, indice + 1))
                         esquerda.chaves.extend(direita.chaves)
                         if No is raiz and len(raiz.chaves) == 0:
                             self.raiz = raiz.filhos[0]  # diminui altura
                             raiz = self.raiz
                         No = esquerda
-                        index = self.ocupMin
+                        indice = self.ocupMin
                     else:
                         raise AssertionError("Condicao inesperada")
                 else:  # procura chave em filhos
-                    filho = No.verifica_remocao(~index)
+                    filho = No.verifica_remocao(~indice)
                     if No is raiz and len(raiz.chaves) == 0:
                         self.raiz = raiz.filhos[0]  # diminui altura
                         raiz = self.raiz
                     No = filho
-                    index = No.busca(obj)
+                    indice = No.busca(x)
 
     # metodo para iterar pelas chaves de forma ordenada
     def __iter__(self):
-        if self.size == 0:
+        if self.tamanho == 0:
             return
 
         pilhaNo = []
@@ -142,17 +139,17 @@ class arvoreB(object):
 
         while len(pilhaNo) > 0:
             No = pilhaNo.pop()
-            index = indicePilha.pop()
+            indice = indicePilha.pop()
             if No.is_folha():
-                for obj in No.chaves:
-                    yield obj
+                for x in No.chaves:
+                    yield x
             else:
-                yield No.chaves[index]
-                index += 1
-                if index < len(No.chaves):
+                yield No.chaves[indice]
+                indice += 1
+                if indice < len(No.chaves):
                     pilhaNo.append(No)
-                    indicePilha.append(index)
-                No = No.filhos[index]
+                    indicePilha.append(indice)
+                No = No.filhos[indice]
                 while True:
                     pilhaNo.append(No)
                     indicePilha.append(0)
@@ -173,13 +170,13 @@ class arvoreB(object):
         def is_folha(self):
             return self.filhos is None
 
-        def busca(self, obj):
+        def busca(self, x):
             chaves = self.chaves
             i = 0
             while i < len(chaves):
-                if obj == chaves[i]:
+                if x == chaves[i]:
                     return i  # chave encontrada
-                elif obj > chaves[i]:
+                elif x > chaves[i]:
                     i += 1
                 else:
                     break
@@ -202,21 +199,21 @@ class arvoreB(object):
             return No.remove_chave(len(No.chaves) - 1)
 
         # remove chave no indice passado
-        def remove_chave(self, index):
-            if index < 0 or index >= len(self.chaves):
-                raise IndexError()
-            return self.chaves.pop(index)
+        def remove_chave(self, indice):
+            if indice < 0 or indice >= len(self.chaves):
+                raise indiceError()
+            return self.chaves.pop(indice)
 
         # realiza remocao de chave em no, removendo tambem filho
         def remove_chave_e_filho(self, chave_i, filho_i):
             if chave_i < 0 or chave_i >= len(self.chaves):
-                raise IndexError()
+                raise indiceError()
             if self.is_folha():
                 if filho_i is not None:
                     raise ValueError()
             else:
                 if filho_i < 0 or filho_i >= len(self.filhos):
-                    raise IndexError()
+                    raise indiceError()
                 del self.filhos[filho_i]
             return self.remove_chave(chave_i)
 
@@ -235,39 +232,39 @@ class arvoreB(object):
             return no_direita, meio
 
         # verifica se remocao requer tratamentos adicionais
-        def verifica_remocao(self, index):
+        def verifica_remocao(self, indice):
             ocupMin = self.ocupMax // 2
-            filho = self.filhos[index]
+            filho = self.filhos[indice]
             if len(filho.keys) > ocupMin:  # no e preciso tratar esse caso
                 return filho
 
             # pega nos irmaos
-            esquerda = self.filhos[index - 1] if index >= 1 else None
-            direita = self.filhos[index + 1] if index < len(self.chaves) else None
+            esquerda = self.filhos[indice - 1] if indice >= 1 else None
+            direita = self.filhos[indice + 1] if indice < len(self.chaves) else None
             interno = not filho.is_folha()
 
             if esquerda is not None and len(esquerda.chaves) > ocupMin:  # pega chave mais a direita da irmao da esquerda
                 if interno:
                     filho.filhos.insert(0, esquerda.filhos.pop(-1))
-                filho.chaves.insert(0, self.chaves[index - 1])
-                self.chaves[index - 1] = esquerda.remove_chave(len(esquerda.chaves) - 1)
+                filho.chaves.insert(0, self.chaves[indice - 1])
+                self.chaves[indice - 1] = esquerda.remove_chave(len(esquerda.chaves) - 1)
                 return filho
             elif direita is not None and len(direita.chaves) > ocupMin:  # pega chave mais a esquerda de irmao a direita
                 if interno:
                     filho.filhos.append(direita.filhos.pop(0))
-                filho.chaves.append(self.chaves[index])
-                self.chaves[index] = direita.remove_chave(0)
+                filho.chaves.append(self.chaves[indice])
+                self.chaves[indice] = direita.remove_chave(0)
                 return filho
             elif esquerda is not None:  # faz uniao de filho com irmao da esquerda
                 if interno:
                     esquerda.fihos.extend(filho.children)
-                esquerda.chaves.append(self.remove_chave_e_filho(index - 1, index))
+                esquerda.chaves.append(self.remove_chave_e_filho(indice - 1, indice))
                 esquerda.chaves.extend(filho.keys)
                 return esquerda
             elif direita is not None:  # faz uniao de filho com irmao da direita
                 if interno:
                     filho.filhos.extend(direita.filhos)
-                filho.chaves.append(self.remove_chave_e_filho(index, index + 1))
+                filho.chaves.append(self.remove_chave_e_filho(indice, indice + 1))
                 filho.chaves.extend(direita.chaves)
                 return filho
             else:
