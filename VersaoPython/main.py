@@ -1,8 +1,8 @@
 import arvoreB
-import pecaquebrada
+import arquivo
 tree = arvoreB.arvoreB(50)
 
-a = pecaquebrada.base("data.txt")
+a = arquivo.base("data.txt")
 chaves = a.getChave()
 prr = a.getPRR()
 
@@ -31,7 +31,18 @@ while 1:
 	elif escolha == 2:
 		break
 	elif escolha == 3:
-		break
+		chave = raw_input("Digite a chave do registro a ser procurado: ")
+		p = tree.buscar(str(chave))
+		try:
+			A = open("data.txt", "r")
+			A.seek(p,0)
+			Registro = A.readline(142) 
+			B = Registro.replace('\r', '\n')
+			C,D= B.split("\n")
+			print(C)
+			A.close()
+		except:
+			print("Chave nao encontrada")
 	elif escolha == 4:
 		break
 	elif escolha == 5:
@@ -39,7 +50,5 @@ while 1:
 	else:
 		print("Opcao inexistente!")
 
-p = tree.buscar('999971')
-print(p)
 
 
