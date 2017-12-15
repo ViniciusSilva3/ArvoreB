@@ -8,7 +8,7 @@ chaves, tamanho = a.getChave()
 prr = a.getPRR()
 
 for i,j in zip(chaves, prr):
-	tree.inserir([i, j])
+	tree.inserir(i, j)
 Origem = tree.raiz
 #CRIACAO DO ARQUIVO APOS O USO DA ARVORE
 
@@ -16,8 +16,9 @@ arquivo = open("BTREE.txt", "w")
 b = 0
 #Escreve primeiro as chaves da raiz:
 tam = len(Origem.chaves)
+arquivo.write("0,")
 while(b<tam):
-	arquivo.write("Chave:%s,PRR:%s;"%(Origem.chaves[b][0], Origem.chaves[b][1]))
+	arquivo.write("%s,%d;"%(Origem.chaves[b], Origem.prr[b]))
 	b +=1
 arquivo.write("\n")
 #Escreve o filho mais a esquerda da raiz
@@ -27,8 +28,9 @@ Filho = Origem.filhos
 while(aux<b):
 	p = 0
 	tam1 = len(Filho[aux].chaves)
+	arquivo.write("1,")
 	while(p<tam1):
-		arquivo.write("Chave:%s,PRR:%s;"%(Filho[aux].chaves[p][0], Filho[aux].chaves[p][1]))
+		arquivo.write("%s,%d;"%(Filho[aux].chaves[p], Filho[aux].prr[p]))
 		p += 1
 	teste = len(Filho[aux].filhos)
 	d = 0
@@ -37,8 +39,9 @@ while(aux<b):
 		while(d<teste):
 			tam2 = len(Neto[d].chaves)
 			aux2 = 0
+			arquivo.write("2,")
 			while(aux2<tam2):
-				arquivo.write("Chave:%s,PRR:%s"%(Neto[d].chaves[aux2][0], Neto[d].chaves[aux2][1]))
+				arquivo.write("%s,%d;"%(Neto[d].chaves[aux2], Neto[d].prr[aux2]))
 				aux2 +=1
 			arquivo.write("\n")
 			teste1 = len(Neto[d].filhos)
@@ -48,8 +51,9 @@ while(aux<b):
 		        	while(e<teste1):
 			        	tam3 = len(BisNeto[e].chaves)
 			        	aux3 = 0
+					arquivo.write("3,")
 			       		while(aux3<tam3):
-				        	arquivo.write("Chave:%s,PRR:%s"%(BisNeto[e].chaves[aux3][0], BisNeto[e].chaves[aux3][1]))
+				        	arquivo.write("%s,%d;"%(BisNeto[e].chaves[aux3], BisNeto[e].prr[aux3]))
 					        aux3 +=1
 					e += 1
 			    		arquivo.write("\n")
