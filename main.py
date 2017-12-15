@@ -11,7 +11,7 @@ for i, j in zip(chaves, prr):
 
 print(chaves[0],prr[0])
 print(chaves[tamanho-1],prr[tamanho-1])
-#print tree 
+#print tree
 while 1:
 	print 30 * "-" , "MENU" , 30 * "-"
 	print "[1]: Inserir elemento"
@@ -52,7 +52,6 @@ while 1:
 
 	elif escolha == 2:
 		chave = raw_input("Digite a chave do registro a ser removido: ")
-		
 		try:
 			V = 0
 			L = tree.buscar(str(chave))
@@ -73,13 +72,11 @@ while 1:
 				if(chave not in A1[i]):
 					new.write(A1[i])
 					new.write("\n")
-					
-
 				i+=1
 			new.close()
 			tree.remove(chave)
 
-		except:	
+		except:
 			print("Chave nao encontrada")
 	elif escolha == 3:
 		chave = raw_input("Digite a chave do registro a ser procurado: ")
@@ -87,7 +84,7 @@ while 1:
 		try:
 			A = open("data.txt", "r")
 			A.seek(p,0)
-			Registro = A.readline(142) 
+			Registro = A.readline(142)
 			B = Registro.replace('\r', '\n')
 			C,D= B.split("\n")
 			print(C)
@@ -95,7 +92,29 @@ while 1:
 		except:
 			print("Chave nao encontrada")
 	elif escolha == 4:
-		break
+        	chave = raw_input("Digite o registro a ser alterado : ")
+		elem = raw_input("Digite os novos elementos do registro : ")
+		try:
+			V = 0
+			A = open("data.txt").read()
+			A = A.replace('\r', '\n')
+			A1 = A.split("\n")
+			new = open("data.txt","w")
+			i = 0
+			while(i < tamanho):
+				if(chave not in A1[i]):
+					if(i == tamanho-1):
+						new.write(A1[i])
+					new.write(A1[i])
+					new.write("\n")
+				else:
+                 			new.write("%s, %s"%(chave, elem))
+					if(i != tamanho-1):
+						new.write("\n")
+				i+=1
+			new.close()
+		except:
+			print("Chave nao encontrada")
 	elif escolha == 5:
 		print("Encerrando programa")
 		break
