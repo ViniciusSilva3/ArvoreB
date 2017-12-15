@@ -30,23 +30,57 @@ while 1:
 
   	if escolha == 1:
   		chave = raw_input("Digite a chave do registro a ser inserido: ")
-  		A = open("data.txt","r")
-  		A.seek(prr[tamanho-1])
-  		line = A.readline()
-  		A.close()
-  		A = open("data.txt","r+")
-  		A.seek(0,2)
-  		A.write("\n%s,"%chave)
-  		A.close()
-  		chaves.append(chave)
-  		R = prr[tamanho-1]
-  		tamanho += 1
-  		soma = R + len(line) + len(chave)
-  		prr.append(soma)
-  		tree.inserir(chave,soma)
+  		V= 0
+  		verifique = 0
+  		while(V<tamanho):
+  			if (chaves[V] == chave):
+  				print("A chave ja existe")
+  				verifique = 1
+  			V+=1
+  		if (verifique == 0):
+	  		A = open("data.txt","r+")
+	  		A.seek(prr[tamanho-1])
+	  		line = A.readline()
+	  		A.write("%s,\n"%chave)
+	  		A.close()
+	  		chaves.append(chave)
+	  		R = prr[tamanho-1]
+	  		tamanho += 1
+	  		soma = R + len(line)
+	  		prr.append(soma)
+	  		tree.inserir(chave,soma)
 
 	elif escolha == 2:
-		break
+		chave = raw_input("Digite a chave do registro a ser removido: ")
+		
+		try:
+			V = 0
+			L = tree.buscar(str(chave))
+			while(V<tamanho):
+				if(prr[V] == L):
+					break
+				V+=1
+			chaves.pop(V)
+			prr.pop(V)
+			tamanho = tamanho - 1
+
+			A = open("data.txt").read()
+			A = A.replace('\r', '\n')
+			A1 = A.split("\n")
+			new = open("data.txt","w")
+			i = 0
+			while(i < tamanho + 2):
+				if(chave not in A1[i]):
+					new.write(A1[i])
+					new.write("\n")
+					
+
+				i+=1
+			new.close()
+			tree.remove(chave)
+
+		except:	
+			print("Chave nao encontrada")
 	elif escolha == 3:
 		chave = raw_input("Digite a chave do registro a ser procurado: ")
 		p = tree.buscar(str(chave))
