@@ -9,7 +9,9 @@ prr = a.getPRR()
 for i, j in zip(chaves, prr):
     tree.inserir(i, j)
 
-print tree 
+print(chaves[0],prr[0])
+print(chaves[tamanho-1],prr[tamanho-1])
+#print tree 
 while 1:
 	print 30 * "-" , "MENU" , 30 * "-"
 	print "[1]: Inserir elemento"
@@ -27,7 +29,22 @@ while 1:
 	  		print("Opcao inexistente!")
 
   	if escolha == 1:
-  		break
+  		chave = raw_input("Digite a chave do registro a ser inserido: ")
+  		A = open("data.txt","r")
+  		A.seek(prr[tamanho-1])
+  		line = A.readline()
+  		A.close()
+  		A = open("data.txt","r+")
+  		A.seek(0,2)
+  		A.write("\n%s,"%chave)
+  		A.close()
+  		chaves.append(chave)
+  		R = prr[tamanho-1]
+  		tamanho += 1
+  		soma = R + len(line) + len(chave)
+  		prr.append(soma)
+  		tree.inserir(chave,soma)
+
 	elif escolha == 2:
 		break
 	elif escolha == 3:
@@ -46,6 +63,7 @@ while 1:
 	elif escolha == 4:
 		break
 	elif escolha == 5:
+		print("Encerrando programa")
 		break
 	else:
 		print("Opcao inexistente!")

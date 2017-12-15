@@ -14,7 +14,7 @@ class base:
         while(1):
         #Esse tratamento de excecoes vai verificar quando o elemento arv1[i] nao existe mais
             try:
-                foo = arv1[i]
+                foo = arv1[i+1]
             except (IndexError):
                 foo = None
                 break
@@ -31,7 +31,7 @@ class base:
         while(1):
         #Esse tratamento de excecoes vai verificar quando o elemento arv1[i] nao existe mais
             try:
-                foo = arv1[i]
+                foo = arv1[i+1]
             except (IndexError):
                 foo = None
                 break
@@ -43,10 +43,10 @@ class base:
 
 # aqui estao alguns testes para testar a classe 'base'
 
-a = base("data.txt")
+'''a = base("data.txt")
 chaves = []
 chaves = a.getChave()
 print(chaves)
 prr = []
 prr = a.getPRR()
-print(prr)
+print(prr)'''
