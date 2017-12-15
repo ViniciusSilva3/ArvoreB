@@ -20,7 +20,7 @@ class base:
                 break
             self.chave.append(arv1[i].split(',')[0])
             i = i+1
-        return self.chave
+        return self.chave, i
 
     def getPRR(self):
         some = 0

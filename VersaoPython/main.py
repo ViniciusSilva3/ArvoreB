@@ -3,7 +3,7 @@ import arquivo
 tree = arvoreB.arvoreB(50)
 
 a = arquivo.base("data.txt")
-chaves = a.getChave()
+chaves, tamanho = a.getChave()
 prr = a.getPRR()
 
 for i, j in zip(chaves, prr):
@@ -50,5 +50,73 @@ while 1:
 	else:
 		print("Opcao inexistente!")
 
+
+#CRIACAO DO ARQUIVO APOS O USO DA ARVORE
+Origem = tree.raiz
+arquivo = open("BTREE.txt", "w")
+b = 0
+#Escreve primeiro as chaves da raiz:
+tam = len(Origem.chaves)
+arquivo.write("0,")
+while(b<tam):
+	arquivo.write("%s,%d;"%(Origem.chaves[b], Origem.prr[b]))
+	b +=1
+arquivo.write("\n")
+#Escreve o filho mais a esquerda da raiz
+#trata a excecao caso nao exista filhos na raiz
+tipo0 = Origem.filhos
+if (tipo0!=None):
+    b = len(Origem.filhos)
+else:
+    b=0
+#tratou a excecao
+aux = 0
+Filho = Origem.filhos
+while(aux<b):
+	p = 0
+	tam1 = len(Filho[aux].chaves)
+	arquivo.write("1,")
+	while(p<tam1):
+		arquivo.write("%s,%d;"%(Filho[aux].chaves[p], Filho[aux].prr[p]))
+		p += 1
+    #tratando excecao caso nao existam filhos
+    	tipo1 = Filho[aux].filhos
+    	if(tipo1 != None):
+        	teste = len(Filho[aux].filhos)
+    	else:
+        	teste = 0
+    #fim da excecao
+	d = 0
+	if(teste != 0):
+		Neto = Filho[aux].filhos
+		while(d<teste):
+			tam2 = len(Neto[d].chaves)
+			aux2 = 0
+			arquivo.write("2,")
+			while(aux2<tam2):
+				arquivo.write("%s,%d;"%(Neto[d].chaves[aux2], Neto[d].prr[aux2]))
+				aux2 +=1
+			arquivo.write("\n")
+            		tipo2 = Neto[d].filhos
+            		if(tipo2 != None):
+				teste1 = len(Neto[d].filhos)
+        	    	else:
+                		teste1 = 0
+	        	e = 0
+	        	if(teste1 != 0):
+		       		BisNeto = Neto[d].filhos
+		       	while(e<teste1):
+		        	tam3 = len(BisNeto[e].chaves)
+		        	aux3 = 0
+				arquivo.write("3,")
+		       		while(aux3<tam3):
+			        	arquivo.write("%s,%d;"%(BisNeto[e].chaves[aux3], BisNeto[e].prr[aux3]))
+				        aux3 +=1
+				e += 1
+		    		arquivo.write("\n")
+			d += 1
+	aux += 1
+arquivo.close()
+#print tree
 
 
