@@ -111,7 +111,7 @@ class arvoreB(object):
                     elif len(esquerda.chaves) == self.ocupMin and len(direita.chaves) == self.ocupMin:
                         # faz uniao do no da esquerda e direita
                         if not esquerda.is_folha():
-                            esquerda.filhos.extend(direita.children)
+                            esquerda.filhos.extend(direita.filhos)
                         prr = esquerda.chaves.append(No.remove_chave_e_filho(indice, indice + 1))
                         esquerda.chaves.extend(direita.chaves)
                         esquerda.prr.extend(direita.prr)
@@ -270,7 +270,7 @@ class arvoreB(object):
                 return filho
             elif esquerda is not None:  # faz uniao de filho com irmao da esquerda
                 if interno:
-                    esquerda.fihos.extend(filho.children)
+                    esquerda.fihos.extend(filho.filhos)
                 c, p = self.remove_chave_e_filho(indice - 1, indice)
                 esquerda.chaves.append(c)
                 esquerda.prr.append(p)
